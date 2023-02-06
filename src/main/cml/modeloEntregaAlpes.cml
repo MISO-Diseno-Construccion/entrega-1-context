@@ -1,0 +1,34 @@
+Domain EntregaDePedidos {
+  domainVisionStatement = "Dominio encargado de la logistica y entrega de paquetes de Entregas de los Alpes"
+
+    Subdomain IntegracionDeTerceros {
+        type = GENERIC_SUBDOMAIN
+        domainVisionStatement = "Subdominio encargado de integrar servicios y aplicaciones externas dentro del negocio"
+
+  }
+
+    Subdomain ManejoDeInventario {
+        type = SUPPORTING_DOMAIN
+        domainVisionStatement = "Subdominio encargado de la organización y manejo de paqueteria en los centros de distribución y bodegas"
+  
+  }
+
+    Subdomain LogisticaDeEnvio {
+        type = CORE_DOMAIN
+        domainVisionStatement = "Subdominio encargado de la planificación de rutas y despachos para las entregas"
+  
+  }
+
+    Subdomain ServicioAlCliente {
+        type = SUPPORTING_DOMAIN
+        domainVisionStatement = "Subdominio encargado de atender las quejas, sugerencias y reclamos de los usuarios para ofrecer un mejor servicio"
+  
+  }
+
+    Subdomain TransporteDePaquetes {
+        type = SUPPORTING_DOMAIN
+        domainVisionStatement = "Subdominio encargado de recibir y entregar los paquetes asignados entre sedes y clientes finales"
+  
+  }
+
+}
