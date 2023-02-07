@@ -25,7 +25,13 @@ Domain EntregaDePedidos {
   
   }
 
-    Subdomain TransporteDePaquetes {
+    Subdomain TransporteDeDomicilios {
+        type = SUPPORTING_DOMAIN
+        domainVisionStatement = "Subdominio encargado de recoger pedidos en las tiendas, restaurantes y bancos para entregarlos rapidamente a los clientes"
+  
+  }
+
+  Subdomain TransporteDePaqueteria {
         type = SUPPORTING_DOMAIN
         domainVisionStatement = "Subdominio encargado de recibir y entregar los paquetes asignados entre sedes y clientes finales"
   
