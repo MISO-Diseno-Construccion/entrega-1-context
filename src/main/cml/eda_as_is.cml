@@ -1,0 +1,146 @@
+/* Example Context Map written with 'ContextMapper DSL' */
+ContextMap InsuranceTeamMap {
+	type = SYSTEM_LANDSCAPE
+	state = AS_IS
+	
+    /* Add contexts that represent subsystems/components to this organizational map: */
+	contains ManejoDeInventarioContext, AlmacenamientoInventarioContext
+
+	/* Define the subsystem/component relationships: */
+	ManejoDeInventarioContext [D,CF]<-[U,OHS] AlmacenamientoInventarioContext
+}
+
+/* Bounded Context Definitions */
+/*
+ContextoManejoDirecciones -> LogisticaDeEnvio
+ContextoIntegracionCouriers -> IntegracionDeTerceros
+ContextoIntegracionConsorcio -> IntegracionDeTerceros
+ContextoRastreoEnvios -> TransporteDePaquetes
+ContextoGestionHojasRuta -> LogisticaDeEnvio
+ContextoAdministracionStock -> ManejoDeInventario
+ContextoDevoluciónProductos -> ServicioAlCliente
+ContextoCoordinacionFinanciera -> LogisticaDeEnvio
+ContextoAlmacenamientoBienes -> ManejoDeInventario
+ContextoEnvioBienes -> ManejoDeInventario
+ContextoManejoVehiculos -> TransporteDePaquetes
+ContextoQuejasReclamos -> ServicioAlCliente
+*/
+
+BoundedContext AlmacenamientoInventarioContext implements AlmacenamientoInventarioDomain {
+	type = FEATURE
+	domainVisionStatement = "Subdominio encargado de almacenar las existencia de productos en los centros de distribución y bodegas"
+	implementationTechnology = "Java, JEE Application"
+	responsibilities = "Existencias, Entradas, Bodega, CentroDistribucion"
+	
+	Aggregate Existencias {
+		Entity Existencia { 
+			aggregateRoot
+			
+			- Producto producto
+            Integer cantidadActual 
+			- List<Entrada> entradas
+            - List<Salida> salidas
+		}
+		
+        ValueObject Entrada {
+			Integer cantidad
+            - Producto producto
+		}
+
+        ValueObject Salida {
+			Integer cantidad
+            - Producto producto
+		}
+
+        Entity Bodega {
+            String nombre
+            /* Address */
+            - List<Existencia> exitencias
+        }
+        Entity CentroDistribucion {
+            String nombre
+            /* Address */
+            - List<Existencia> exitencias
+        }
+	}
+
+    Aggregate Productos {
+		Entity Producto {
+			aggregateRoot
+			
+			- ProductId identifier
+			String productName
+		}
+		
+		ValueObject ProductId {
+			int productId key
+		}
+	}
+}
+
+BoundedContext ManejoDeInventarioContext implements ManejoDeInventarioDomain {
+	type = FEATURE
+	domainVisionStatement = "Subdominio encargado de verificar existencias en los centros de distribución y bodegas y distrubirlas/recolectarlas en los centros distribución"
+	implementationTechnology = "Java, JEE Application"
+	responsibilities = "Existencias, Verificar"
+	
+    Aggregate Entregas {
+        Entity Entrega {
+            aggregateRoot
+
+            - List<Existencia> exitencias
+        }
+    }
+	/*Aggregate Existencias {
+		Entity Existencia { 
+			aggregateRoot
+			
+			String producto
+            Integer cantidadActual
+			- Salida salida 
+			- Entrada entrada
+		}
+		
+		ValueObject Salida {
+			Integer cantidad
+            String producto
+		}
+        ValueObject Entrada {
+			Integer cantidad
+            String producto
+		}
+	}*/
+}
+
+/* Domain & Subdomain Definitions */
+Domain EntregaDePedidosDomain {
+  domainVisionStatement = "Dominio encargado de la logistica y entrega de paquetes de Entregas de los Alpes"
+    Subdomain IntegracionCouriersDeTercerosDomain {
+        type = GENERIC_SUBDOMAIN
+        domainVisionStatement = "Subdominio encargado de integrar servicios de Couriers externas con EDA"
+  }
+    Subdomain AlmacenamientoInventarioDomain {
+        type = CORE_DOMAIN
+        domainVisionStatement = "Subdominio encargado de suministrar existencia de productos desde los centros de distribución y bodegas"
+    }
+    Subdomain ManejoDeInventarioDomain {
+        type = CORE_DOMAIN
+        domainVisionStatement = "Subdominio encargado de verificar existencias en los centros de distribución y bodegas y distrubirlas/recolectarlas en los centros distribución"
+    }
+    Subdomain LogisticaDeEnvioDomain {
+        type = CORE_DOMAIN
+        domainVisionStatement = "Subdominio encargado de la planificación de rutas y despachos para las entregas"
+  }
+    Subdomain ServicioAlClienteDomain {
+        type = SUPPORTING_DOMAIN
+        domainVisionStatement = "Subdominio encargado de atender las quejas, sugerencias y reclamos de los usuarios para ofrecer un mejor servicio"
+  }
+  Subdomain TransporteDeDomiciliosDomain {
+        type = SUPPORTING_DOMAIN
+        domainVisionStatement = "Subdominio encargado de recoger pedidos en las tiendas, restaurantes y bancos para entregarlos rapidamente a los clientes"
+  }
+  Subdomain TransporteDePaqueteriaDomain {
+        type = SUPPORTING_DOMAIN
+        domainVisionStatement = "Subdominio encargado de recibir y entregar los paquetes asignados entre sedes y clientes finales"
+  }
+}
