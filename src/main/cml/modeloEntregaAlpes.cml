@@ -1,3 +1,76 @@
+ContextMap EntregaAlpes {
+  contains ContextoAdministracionStock
+  contains ContextoConsolidacionPaquetes
+  contains ContextoCoordinacionFinanciera
+  contains ContextoDevolucionProductos
+  contains ContextoEmpaquetadoBienes
+  contains ContextoGestionHojasRuta
+  contains ContextoIntegracionConsorcio
+  contains ContextoIntegracionCouriers
+  contains ContextoManejoDirecciones
+  contains ContextoManejoDomicilios
+  contains ContextoManejoFlota
+  contains ContextoQuejasReclamos
+  contains ContextoRastreoEnvios
+  contains ContextoRecepcionBienes
+}
+
+BoundedContext ContextoManejoDirecciones implements LogisticaDeEnvio {
+  domainVisionStatement = "El contexto de manejo de direcciones se encarga de administrar, planear y optimizar las rutas de envio que deberian seguir los vehiculos."
+}
+
+BoundedContext ContextoIntegracionCouriers implements IntegracionDeTerceros {
+  domainVisionStatement = "El contexto de integración de Couriers se encarga de conectar a Entrega de los Alpes con servicios de mensajeria externos cuando la demanda es muy elevada."
+}
+
+BoundedContext ContextoIntegracionConsorcio implements LogisticaDeEnvio {
+  domainVisionStatement = "El contexto de integración de consorcios se encarga de conectar a Entrega de los Alpes con sus asociados (AlpesOnline, DomiciliosAlpes y Banco de los Alpes) para ofrecer sus servicios de envio."
+}
+
+BoundedContext ContextoRastreoEnvios implements TransporteDePaqueteria, TransporteDeDomicilios {
+  domainVisionStatement = "El contexto de rastreo de envios se encarga de analizar y actualizar en tiempo real las rutas de los vehiculos."
+}
+
+BoundedContext ContextoGestionHojasRuta implements LogisticaDeEnvio {
+  domainVisionStatement = "El contexto de gestion de hojas de ruta se encarga de registrar y almacenar los cambios de puntos de entrega y eventos de transporte."
+}
+
+BoundedContext ContextoAdministracionStock implements ManejoDeInventario {
+  domainVisionStatement = "El contexto de administración de stock se encarga de organizar y asignar paquetes dentro de las bodegas y centros de distribución."
+}
+
+BoundedContext ContextoDevolucionProductos implements ServicioAlCliente {
+  domainVisionStatement = "El contexto de devolución de productos se encarga de gestionar con los clientes las peticiones de devolucion y su retorno al proveedor en caso de ser aceptadas"
+}
+
+BoundedContext ContextoCoordinacionFinanciera implements LogisticaDeEnvio {
+  domainVisionStatement = "El contexto de coordinacion financiera se encarga de establecer los costos de almacenamiento, transporte y cotizacion con servicios externos."
+}
+
+BoundedContext ContextoRecepcionBienes implements ManejoDeInventario {
+  domainVisionStatement = "El contexto de recepción de bienes se encarga de recibir los paquetes en las bodegas y centros de distribución para su posterior almacenamiento."
+}
+
+BoundedContext ContextoEmpaquetadoBienes implements ManejoDeInventario {
+  domainVisionStatement = "El contexto de empaquetado de bienes se encarga de recuperar y preparar los paquetes de las bodegas y centros de distribución con el fin de transportarlos al cliente final u otro sistema de almacenamiento."
+}
+
+BoundedContext ContextoManejoFlota implements TransporteDePaqueteria {
+  domainVisionStatement = "El contexto de manejo de flota se encarga de proveer y manejar vehiculos de la flota empresarial para envio de paqueteria"
+}
+
+BoundedContext ContextoQuejasReclamos implements ServicioAlCliente {
+  domainVisionStatement = "El contexto de quejas y reclamos se encarga de recibir retroalimentación de los clientes para comunicarsela al sector logistico."
+}
+
+BoundedContext ContextoConsolidacionPaquetes implements LogisticaDeEnvio {
+  domainVisionStatement = "El contexto de consolidación de paquetes se encarga de determinar activamente los puntos de almacenamiento optimos para unificar ordenes de manera eficiente."
+}
+
+BoundedContext ContextoManejoDomicilios implements TransporteDeDomicilios {
+  domainVisionStatement = "El contexto de manejo de domicilios se encarga de proveer y manejar vehiculos con personal de reparto bajo las politicas de envio de viveres"
+}
+
 Domain EntregaDePedidos {
   domainVisionStatement = "Dominio encargado de la logistica y entrega de paquetes de Entregas de los Alpes"
 
