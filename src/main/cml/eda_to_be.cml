@@ -9,12 +9,16 @@ ContextMap EnvioAlpesMap {
     contains FacilitacionDeInventarioContext
     contains EmpaquetamientoContext, ContextoGestionHojasRuta
     contains CourierTerceroContext, TransporteDeDomiciliosContext, TransporteDePaqueteriaContext
+    contains RecepcionContext
 
     /* Define the subsystem/component relationships: */
     RevisionInventarioContext [D, ACL]<-[U] AlmacenamientoInventarioContext
     RevisionInventarioContext [D, ACL]<-[U] AlmacenamientoInventarioTerceroContext
 
     ManejoDeClienteContext [P]<->[P] ManejoDeOrdenContext
+
+    RecepcionContext [P]<->[P] AlmacenamientoInventarioContext
+    RecepcionContext [P]<->[P] AlmacenamientoInventarioTerceroContext
 
     ManejoDireccionesContext [U, OHS]->[D] AlmacenamientoInventarioContext
     ManejoDireccionesContext [U, OHS]->[D] ManejoDeClienteContext
@@ -81,6 +85,10 @@ BoundedContext TransporteDeDomiciliosContext implements TransporteDeDomiciliosDo
 
 BoundedContext TransporteDePaqueteriaContext implements TransporteDePaqueteriaDomain {
     domainVisionStatement = "Contexto donde se usa la propia flota de transport de EDA para el transporte y entrega de pedidos"
+}
+
+BoundedContext RecepcionContext implements AlmacenamientoInventarioDomain {
+  domainVisionStatement = "El contexto de recepción de bienes se encarga de recibir los paquetes en las bodegas y centros de distribución para su posterior almacenamiento."
 }
 
 /* Domain & Subdomain Definitions */
