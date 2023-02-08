@@ -10,12 +10,16 @@ ContextMap EnvioAlpesMap {
     contains EmpaquetamientoContext, ContextoGestionHojasRuta
     contains CourierTerceroContext, TransporteDeDomiciliosContext, TransporteDePaqueteriaContext
     contains RecepcionContext
+    contains IntegracionDeClientesExternosContext
+    contains IntegracionDeConsorcioContext
 
     /* Define the subsystem/component relationships: */
     RevisionInventarioContext [D, ACL]<-[U] AlmacenamientoInventarioContext
     RevisionInventarioContext [D, ACL]<-[U] AlmacenamientoInventarioTerceroContext
+    IntegracionDeClientesExternosContext [D,ACL]<-[U] IntegracionDeConsorcioContext
 
     ManejoDeClienteContext [P]<->[P] ManejoDeOrdenContext
+    IntegracionDeClientesExternosContext [P] <-> [P] ManejoDeOrdenContext
 
     RecepcionContext [P]<->[P] AlmacenamientoInventarioContext
     RecepcionContext [P]<->[P] AlmacenamientoInventarioTerceroContext
@@ -75,7 +79,7 @@ BoundedContext ContextoGestionHojasRuta implements LogisticaDeEnvioDomain {
     domainVisionStatement = "Contexto encargado de preparar la hoja de ruta para transportar los diferentes pedidos"
 }
 
-BoundedContext CourierTerceroContext implements IntegracionCouriersDeTercerosDomain {
+BoundedContext CourierTerceroContext implements IntegracionDeTercerosDomain {
     domainVisionStatement = "Manejo de la integracion con Couriers de terceros para el trasnporte y la entrega de pedidos"
 }
 
@@ -89,6 +93,14 @@ BoundedContext TransporteDePaqueteriaContext implements TransporteDePaqueteriaDo
 
 BoundedContext RecepcionContext implements AlmacenamientoInventarioDomain {
   domainVisionStatement = "El contexto de recepción de bienes se encarga de recibir los paquetes en las bodegas y centros de distribución para su posterior almacenamiento."
+}
+
+BoundedContext IntegracionDeConsorcioContext implements IntegracionDeTercerosDomain {
+  domainVisionStatement = "El contexto de integracion de consorcios se encarga de recibir las peticiones de envio de los aliados del consorcio de los Alpes"
+}
+
+BoundedContext IntegracionDeClientesExternosContext implements IntegracionDeTercerosDomain {
+  domainVisionStatement = "El contexto de integracion de externos se encarga de recibir las peticiones de envio de cualquier compañia externa que requiera del servicio de envio"
 }
 
 /* Domain & Subdomain Definitions */
@@ -120,9 +132,9 @@ Domain EntregaDePedidosDomain {
         domainVisionStatement = "Subdominio encargado de la planificación de rutas y despachos para las entregas"
     }
 
-    Subdomain IntegracionCouriersDeTercerosDomain {
+    Subdomain IntegracionDeTercerosDomain {
         type = GENERIC_SUBDOMAIN
-        domainVisionStatement = "Subdominio encargado de integrar servicios de Couriers externas con EDA"
+        domainVisionStatement = "Subdominio encargado de integrar servicios de Couriers externas con EDA y recibir peticiones extrernas de envio"
     }
 
     Subdomain ServicioAlClienteDomain {
