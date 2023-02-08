@@ -1,15 +1,18 @@
 /* Example Context Map written with 'ContextMapper DSL' */
 ContextMap EnvioAlpesMap {
     type = SYSTEM_LANDSCAPE
-    state = AS_IS
+    state = TO_BE
     /* Add contexts that represent subsystems/components to this organizational map: */
-    contains RevisionInventarioContext, AlmacenamientoInventarioContext, ManejoDeClienteContext, ManejoDeOrdenContext
-    contains ManejoDireccionesContext, FacilitacionDeInventarioContext
+    contains RevisionInventarioContext, ManejoDeClienteContext, ManejoDeOrdenContext
+    contains ManejoDireccionesContext
+    contains AlmacenamientoInventarioTerceroContext, AlmacenamientoInventarioContext
+    contains FacilitacionDeInventarioContext
     contains EmpaquetamientoContext, ContextoGestionHojasRuta
     contains CourierTerceroContext, TransporteDeDomiciliosContext, TransporteDePaqueteriaContext
 
     /* Define the subsystem/component relationships: */
-    RevisionInventarioContext [P]<->[P] AlmacenamientoInventarioContext
+    RevisionInventarioContext [D, ACL]<-[U] AlmacenamientoInventarioContext
+    RevisionInventarioContext [D, ACL]<-[U] AlmacenamientoInventarioTerceroContext
 
     ManejoDeClienteContext [P]<->[P] ManejoDeOrdenContext
 
@@ -40,7 +43,12 @@ BoundedContext ManejoDeOrdenContext implements ManejoDeOrdenDomain {
 
 BoundedContext AlmacenamientoInventarioContext implements AlmacenamientoInventarioDomain {
     type = APPLICATION
-    domainVisionStatement = "Contexto encargado de almacenar las existencia de productos en los centros de distribución y bodegas"
+    domainVisionStatement = "Contexto encargado de almacenar las existencia de productos en los centros de distribución y bodegas de EDA"
+}
+
+BoundedContext AlmacenamientoInventarioTerceroContext implements AlmacenamientoInventarioDomain {
+    type = APPLICATION
+    domainVisionStatement = "Contexto encargado de almacenar las existencia de productos en los centros de distribución y bodegas de terceros"
 }
 
 BoundedContext RevisionInventarioContext implements ManejoDeInventarioDomain {
@@ -50,7 +58,7 @@ BoundedContext RevisionInventarioContext implements ManejoDeInventarioDomain {
 
 BoundedContext FacilitacionDeInventarioContext implements ManejoDeInventarioDomain {
     type = APPLICATION
-    domainVisionStatement = "Contexto encargado de distrubir/facilitar existencias a los centros de distribucion para ser empaquetados y despachadas"
+    domainVisionStatement = "Contexto encargado de distrubir/facilitar existencias a los centros de distribucion de EDA para ser despachadas"
 }
 
 BoundedContext EmpaquetamientoContext implements LogisticaDeEnvioDomain {
@@ -125,4 +133,3 @@ Domain EntregaDePedidosDomain {
     }
 
 }
-
