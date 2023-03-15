@@ -12,6 +12,7 @@ ContextMap EnvioAlpesMap {
     contains RecepcionContext
     contains IntegracionDeClientesExternosContext
     contains IntegracionDeConsorcioContext
+    contains ManejoBodegasExternasContext
 
     /* Define the subsystem/component relationships: */
     RevisionInventarioContext [D, ACL]<-[U] AlmacenamientoInventarioContext
@@ -19,10 +20,10 @@ ContextMap EnvioAlpesMap {
     IntegracionDeClientesExternosContext [D,ACL]<-[U] IntegracionDeConsorcioContext
 
     ManejoDeClienteContext [P]<->[P] ManejoDeOrdenContext
-    IntegracionDeClientesExternosContext [P] <-> [P] ManejoDeOrdenContext
+    IntegracionDeClientesExternosContext [U] -> [D] ManejoDeOrdenContext
 
-    RecepcionContext [P]<->[P] AlmacenamientoInventarioContext
-    RecepcionContext [P]<->[P] AlmacenamientoInventarioTerceroContext
+    RecepcionContext [U, OHS]->[D] AlmacenamientoInventarioContext
+    RecepcionContext [U, OHS]->[D] AlmacenamientoInventarioTerceroContext
 
     ManejoDireccionesContext [U, OHS]->[D] AlmacenamientoInventarioContext
     ManejoDireccionesContext [U, OHS]->[D] ManejoDeClienteContext
@@ -33,10 +34,15 @@ ContextMap EnvioAlpesMap {
     ContextoGestionHojasRuta [U, OHS]->[D] TransporteDeDomiciliosContext
     ContextoGestionHojasRuta [U, OHS]->[D] TransporteDePaqueteriaContext
     ContextoGestionHojasRuta [U, OHS]->[D] CourierTerceroContext
+    ManejoBodegasExternasContext [U, OHS]->[D] RevisionInventarioContext
 }
 
 BoundedContext ManejoDireccionesContext implements LogisticaDeEnvioDomain {
     domainVisionStatement = "El contexto de manejo de direcciones para clientes, bodegas y centros de distribucion."
+}
+
+BoundedContext ManejoBodegasExternasContext implements ManejoDeInventarioDomain {
+    domainVisionStatement = "El contexto de manejo de bodegas externas se encarga de administrar el flujo de paquetes en bodegas y centros de distribución de terceros"
 }
 
 BoundedContext ManejoDeClienteContext implements ManejoDeClienteDomain {
@@ -104,13 +110,8 @@ BoundedContext IntegracionDeClientesExternosContext implements IntegracionDeTerc
 }
 
 /* Domain & Subdomain Definitions */
-Domain EntregaDePedidosDomain {
-    domainVisionStatement = "Dominio encargado de la logistica y entrega de paquetes de Entregas de los Alpes"
-    
-     Subdomain ManejoDeClienteDomain {
-        type = GENERIC_SUBDOMAIN
-        domainVisionStatement = "Dominio encargado de todo lo relacionado a Clientes en Entrega los Alpes"
-    }
+Domain ManejoDePedidosDomain {
+    domainVisionStatement = "Dominio encargado del manejo y entrega de paquetes de Entregas de los Alpes"
 
     Subdomain ManejoDeOrdenDomain {
         type = GENERIC_SUBDOMAIN
@@ -127,21 +128,6 @@ Domain EntregaDePedidosDomain {
         domainVisionStatement = "Subdominio encargado de revisar, recolectar y distribuir existencias en los centros de distribución y bodegas para ser despachadas"
     }
 
-    Subdomain LogisticaDeEnvioDomain {
-        type = CORE_DOMAIN
-        domainVisionStatement = "Subdominio encargado de la planificación de rutas y despachos para las entregas"
-    }
-
-    Subdomain IntegracionDeTercerosDomain {
-        type = GENERIC_SUBDOMAIN
-        domainVisionStatement = "Subdominio encargado de integrar servicios de Couriers externas con EDA y recibir peticiones extrernas de envio"
-    }
-
-    Subdomain ServicioAlClienteDomain {
-        type = SUPPORTING_DOMAIN
-        domainVisionStatement = "Subdominio encargado de atender las quejas, sugerencias y reclamos de los usuarios para ofrecer un mejor servicio"
-    }
-
     Subdomain TransporteDeDomiciliosDomain {
         type = SUPPORTING_DOMAIN
         domainVisionStatement = "Subdominio encargado de recoger pedidos en las tiendas, restaurantes y bancos para entregarlos rapidamente a los clientes"
@@ -150,6 +136,31 @@ Domain EntregaDePedidosDomain {
     Subdomain TransporteDePaqueteriaDomain {
         type = SUPPORTING_DOMAIN
         domainVisionStatement = "Subdominio encargado de recibir y entregar los paquetes asignados entre sedes y clientes finales"
+    }
+
+}
+
+Domain LogisticaDomain {
+    domainVisionStatement = "Dominio encargado de la logistica de envios de Entregas de los Alpes"
+
+    Subdomain ManejoDeClienteDomain {
+        type = GENERIC_SUBDOMAIN
+        domainVisionStatement = "Dominio encargado de todo lo relacionado a Clientes en Entrega los Alpes"
+    }
+
+    Subdomain ServicioAlClienteDomain {
+        type = SUPPORTING_DOMAIN
+        domainVisionStatement = "Subdominio encargado de atender las quejas, sugerencias y reclamos de los usuarios para ofrecer un mejor servicio"
+    }
+
+    Subdomain IntegracionDeTercerosDomain {
+        type = GENERIC_SUBDOMAIN
+        domainVisionStatement = "Subdominio encargado de integrar servicios de Couriers externas con EDA y recibir peticiones extrernas de envio"
+    }
+
+    Subdomain LogisticaDeEnvioDomain {
+        type = CORE_DOMAIN
+        domainVisionStatement = "Subdominio encargado de la planificación de rutas y despachos para las entregas"
     }
 
 }
